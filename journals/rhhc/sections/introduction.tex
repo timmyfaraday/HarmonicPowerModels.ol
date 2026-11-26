@@ -6,20 +6,6 @@
 
 \IEEEPARstart{R}{eaching} a net-zero economy by 2050 requires extensive electrification of the energy system. During the past two decades, renewable generation, particularly wind and photovoltaic power, has grown steadily and is expected to accelerate towards 2050~\cite{international_energy_agency_world_2023}. At the same time, decarbonization targets require the electrification of transport, heating, and industrial processes, replacing fossil fuels with electricity. In Europe, studies project that the total electricity demand will triple by 2050~\cite{energyville_paths_2023}. Consequently, future power systems will be largely dominated by power-electronic interfaced resources on both the supply and demand sides. This transition fundamentally changes the harmonic behavior of power systems. Traditional grids, dominated by synchronous machines and mostly linear loads, exhibited limited harmonic distortion. Modern systems, however, increasingly rely on converters whose nonlinear characteristics generate a broad spectrum of harmonic currents. The aggregation of numerous distributed converters creates new challenges in maintaining harmonic voltage quality across transmission and distribution networks.
 
-A key challenge arises from the stochastic nature of the harmonic impedance of the network. System operators describe cables and overhead lines by their sequence resistance, reactance and susceptance at the fundamental frequency, taken from datasheets or commissioning measurements, and harmonic studies extrapolate these values to higher frequencies with scaling rules. In reality, the harmonic impedance follows from the physical inputs of each cable and line, e.g., the resistivities and temperatures of the conductors and screens, the permittivity of the insulation, the dimensions within their manufacturing tolerances, the laying geometry and the earth. ``In general, most of the physical parameters of a cable such as the resistivity, the permittivity and $\tan{\delta}$ are frequency- and temperature-dependent, and such data are not even available from a cable manufacturer. The same is true for the earth resistivity and permittivity.''~\cite[\S\,2.5.2.6]{ametani_cable_2015}. A cable project adds its own variability: the conductor temperature follows the load, the earth resistivity varies by orders of magnitude along the route and over the seasons, and the installed cables depart from their design within the acceptance limits of the standards. The harmonic impedances near a parallel resonance are the most sensitive to these inputs, and the scaling rules miss their joint effect. As the penetration of the converter increases, system operators need transparent metrics to assess whether additional units can be connected without exceeding harmonic limits. Harmonic hosting capacity provides such a metric by defining the maximum allowable harmonic emissions while ensuring compliance with power-quality standards.  The harmonic hosting capacity must therefore hold for every network that the physical inputs allow. However, most existing methods rely on impedance data at the fundamental frequency, extrapolated towards higher harmonics with scaling rules, leading to overly conservative or insufficiently protective results.
-
-\subsection{Literature Review}
-\label{sec:literature_review}
-
-A growing body of literature addresses the harmonic hosting capacity of a power system, the uncertainty of the network harmonic impedance, harmonic analysis under bounded rather than probabilistic uncertainty, and optimization with a guarantee over uncertain data. Table~\ref{tab:literature_review} summarizes the publications discussed below, characterized by their objective, mathematical method, network representation, treatment of uncertainty and tractability, and by which of the following features they treat as uncertain:
-\begin{enumerate*}
-    \item [(a)] unit harmonic injection,
-    \item [(b)] background harmonic distortion,
-    \item [(c)] network parameters,
-    \item [(d)] network exploitation, and
-    \item [(e)] harmonic limits.
-\end{enumerate*}
-
 \begin{table*}[!t]
     \centering
     \caption{Literature review on harmonic hosting capacity, network harmonic impedance uncertainty, bounded-uncertainty harmonic analysis and robust optimization over network parameters, in order of discussion, enumerating the uncertain features~(a)--(e). The entries marked $\star$ are prior work of the present authors.}
@@ -57,6 +43,20 @@ A growing body of literature addresses the harmonic hosting capacity of a power 
     $^{d}$Tractability expressed as the number of nodes and the solve time in minutes. $^{*}$Positive- and negative-sequence harmonics 5--25, 23 uncertain physical inputs, on 10 threads. $^{**}$Zero-sequence variants without recombination, harmonics 2--50, on 16 threads.}
 \end{table*}
 
+A key challenge arises from the stochastic nature of the harmonic impedance of the network. System operators describe cables and overhead lines by their sequence resistance, reactance and susceptance at the fundamental frequency, taken from datasheets or commissioning measurements, and harmonic studies extrapolate these values to higher frequencies with scaling rules. In reality, the harmonic impedance follows from the physical inputs of each cable and line, e.g., the resistivities and temperatures of the conductors and screens, the permittivity of the insulation, the dimensions within their manufacturing tolerances, the laying geometry and the earth. ``In general, most of the physical parameters of a cable such as the resistivity, the permittivity and $\tan{\delta}$ are frequency- and temperature-dependent, and such data are not even available from a cable manufacturer. The same is true for the earth resistivity and permittivity.''~\cite[\S\,2.5.2.6]{ametani_cable_2015}. A cable project adds its own variability: the conductor temperature follows the load, the earth resistivity varies by orders of magnitude along the route and over the seasons, and the installed cables depart from their design within the acceptance limits of the standards. The harmonic impedances near a parallel resonance are the most sensitive to these inputs, and the scaling rules miss their joint effect. As the penetration of the converter increases, system operators need transparent metrics to assess whether additional units can be connected without exceeding harmonic limits. Harmonic hosting capacity provides such a metric by defining the maximum allowable harmonic emissions while ensuring compliance with power-quality standards.  The harmonic hosting capacity must therefore hold for every network that the physical inputs allow. However, most existing methods rely on impedance data at the fundamental frequency, extrapolated towards higher harmonics with scaling rules, leading to overly conservative or insufficiently protective results.
+
+\subsection{Literature Review}
+\label{sec:literature_review}
+
+A growing body of literature addresses the harmonic hosting capacity of a power system, the uncertainty of the network harmonic impedance, harmonic analysis under bounded rather than probabilistic uncertainty, and optimization with a guarantee over uncertain data. Table~\ref{tab:literature_review} summarizes the publications discussed below, characterized by their objective, mathematical method, network representation, treatment of uncertainty and tractability, and by which of the following features they treat as uncertain:
+\begin{enumerate*}
+    \item [(a)] unit harmonic injection,
+    \item [(b)] background harmonic distortion,
+    \item [(c)] network parameters,
+    \item [(d)] network exploitation, and
+    \item [(e)] harmonic limits.
+\end{enumerate*}
+
 \subsubsection{Harmonic hosting capacity}
 
 The standard IEC~61000-3-6 allocates planning levels over the installations connected to a point of common coupling and aggregates their emissions with an indicative summation law~\cite{noauthor_iec61000-3-6_2008}. Santos et al.\ used the summation law to determine the harmonic hosting capacity behind a Norton equivalent with background distortion of unknown phase~\cite{santos_considerations_2015}. Sun and Harrison proposed the first optimization-based stochastic method, with percentile-based harmonic distortion limits as chance constraints within an ac optimal power flow~\cite{sun_distribution_2022}. Nakhodchi et al.\ showed for a fast charging station for electric vehicles that the estimated hosting capacity depends strongly on how the medium-voltage network and the remote loads are modeled~\cite{nakhodchi_impact_2023}. Ismael et al.\ designed a filter that maximizes the harmonic-constrained hosting capacity of a photovoltaic system, with a metaheuristic around a Monte Carlo simulation over, among others, the filter parameters~\cite{ismael_probabilistic_2019}. At transmission level, a Monte Carlo study over the system loading found the harmonic hosting capacity to be governed by resonance-sensitive impedance~\cite{emini_study_2026}. The present authors determined an exact lower bound for the equitable harmonic hosting capacity with a second-order cone formulation of the full network~\cite{vanacker_hosting_2026}, showed that underground cables change it substantially~\cite{vanacker_impact_2025}, and extended it to stochastic harmonic current angles with chance constraints~\cite{vanacker_shhc}. Except for the filter in~\cite{ismael_probabilistic_2019} all of these methods take the network parameters as known.
@@ -85,7 +85,7 @@ Moreover, the zero-sequence harmonics, for which the transformer windings and ea
 % Table II (Section II) is defined here so that, as a double-column float, it lands at the bottom of the page on which Section II starts
 \begin{table*}[!b]
     \centering
-    \caption{Cables, overhead lines and earth of the IEEE 30-bus case: layout, and nominal value and interval of the 11 most influential of the 23 uncertain inputs, with the largest relative change of a sequence parameter at \textcolor{blue}{50, 650 or 1250\,Hz} when the input alone moves to an end of its interval; $z_{0}$, $z_{1}$ and $y_{0}$, $y_{1}$ are the zero- and positive-sequence series impedance and shunt admittance per unit length. }
+    \caption{Cables, overhead lines and earth of the IEEE 30-bus case: layout, and nominal value and interval of the 11 most influential of the 23 uncertain inputs, with the largest relative change of a sequence parameter at \textcolor{black}{50, 650 or 1250\,Hz} when the input alone moves to an end of its interval; $z_{0}$, $z_{1}$ and $y_{0}$, $y_{1}$ are the zero- and positive-sequence series impedance and shunt admittance per unit length. }
     \label{tab:parameter_box}
     \footnotesize\setlength{\tabcolsep}{4pt}
     \begin{tabular}{ >{\raggedright\arraybackslash}p{0.42\textwidth} >{\raggedright\arraybackslash}p{0.20\textwidth} l r }
@@ -111,7 +111,7 @@ Moreover, the zero-sequence harmonics, for which the transformer windings and ea
         resistivity, logarithmic scale & 100\,$\Omega\cdot$m & 10 to 1000\,$\Omega\cdot$m & 14.6\,\% $z_{0}$ \\
         relative permittivity & 10 & -- & -- \\
         \multicolumn{4}{l}{\textit{12 further inputs}} \\
-        semiconducting screens; wire diameters and lay ratios~\cite{en50182_2001,iec62641_2022,iec63248_2022}; metal resistivities; phase steel permeability & & & \textcolor{blue}{$\leq 0.65$\,\%}
+        semiconducting screens; wire diameters and lay ratios~\cite{en50182_2001,iec62641_2022,iec63248_2022}; metal resistivities; phase steel permeability & & & \textcolor{black}{$\leq 0.65$\,\%}
     \end{tabular}
 \end{table*}
 
